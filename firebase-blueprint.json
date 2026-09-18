@@ -1,0 +1,33 @@
+{
+  "entities": {
+    "Company": {
+      "title": "Company",
+      "description": "MSME Company Profile and exporter details",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "companyName": { "type": "string", "maxLength": 200 },
+        "udyamNumber": { "type": "string", "maxLength": 30 },
+        "gstin": { "type": "string", "maxLength": 20 },
+        "enterpriseCategory": { "type": "string", "enum": ["Micro", "Small", "Medium"] },
+        "sector": { "type": "string", "enum": ["Steel", "Aluminium", "Cement", "Fertiliser"] },
+        "state": { "type": "string", "maxLength": 50 },
+        "city": { "type": "string", "maxLength": 100 },
+        "authorizedPerson": { "type": "string", "maxLength": 150 },
+        "designation": { "type": "string", "maxLength": 100 },
+        "email": { "type": "string", "format": "email", "maxLength": 150 },
+        "phone": { "type": "string", "maxLength": 30 },
+        "verifiedStatus": { "type": "boolean" },
+        "createdAt": { "type": "string", "maxLength": 50 },
+        "authUid": { "type": "string", "maxLength": 128 }
+      },
+      "required": ["companyName", "udyamNumber", "email", "authUid"]
+    }
+  },
+  "firestore": {
+    "/companies/{companyId}": {
+      "schema": "Company",
+      "description": "Registered Indian MSME enterprise accounts mapped by user auth UID"
+    }
+  }
+}

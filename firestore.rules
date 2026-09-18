@@ -1,0 +1,37 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 1. Global Safety Net: Default-deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidCompany(data) {
+      return data.companyName is string && data.companyName.size() >= 2 && data.companyName.size() <= 200 &&
+             data.udyamNumber is string && data.udyamNumber.size() >= 5 && data.udyamNumber.size() <= 30 &&
+             data.email is string && data.email.size() <= 150 &&
+             data.authUid is string && data.authUid == request.auth.uid;
+    }
+
+    match /companies/{companyId} {
+      allow get: if isSignedIn() && isValidId(companyId);
+      allow list: if isSignedIn() && resource.data.authUid == request.auth.uid;
+      allow create: if isOwner(companyId) && isValidId(companyId) && isValidCompany(request.resource.data);
+      allow update: if isOwner(companyId) && isValidId(companyId) && isValidCompany(request.resource.data) &&
+                       request.resource.data.authUid == resource.data.authUid;
+      allow delete: if isOwner(companyId) && isValidId(companyId);
+    }
+  }
+}

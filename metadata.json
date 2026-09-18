@@ -1,0 +1,6 @@
+{
+  "name": "CarbonBridge",
+  "description": "A comprehensive statistical decision-support and EU CBAM compliance platform for Indian MSME manufacturers and exporters with enterprise authentication and central regulatory admin audit portal.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
